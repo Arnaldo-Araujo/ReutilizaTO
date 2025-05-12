@@ -132,3 +132,13 @@ Funcionalidades como: cadastro de produtos, busca por itens, registro de trocas 
 - Código no GitHub
 - Apresentação final em grupo
 
+### 📆 Calendário de Maio - Entregas do Projeto ReutilizaTO
+Data | Dia da Semana | Entrega
+--- | --- | ---
+03/05/2025 | Sábado | Protótipo da Aplicação
+08/05/2025 | Quinta-feira | Documento de Requisitos
+10/05/2025 | Sábado | Front-End da Aplicação
+12/05/2025 | Segunda-feira | Banco de Dados
+15/05/2025 | Quinta-feira | Configuração do SO/Redes
+17/05/2025 | Sábado | Back-End da Aplicação
+29/05/2025 | Quinta-feira | Apresentação Final

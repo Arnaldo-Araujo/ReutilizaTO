@@ -19,8 +19,6 @@ cd ReutilizaTO
 
 ### 3. 🔄 Configure o repositório original como remoto "upstream"
 ```bash
-Copiar
-Editar
 git remote add upstream https://github.com/Arnaldo-Araujo/ReutilizaTO.git
 ```
 ### 4. 🔧 Crie um branch com seu nome ou tarefa
@@ -36,8 +34,6 @@ Edite os arquivos desejados, como README.md, index.html, pasta DocumentosDiverso
 ### 6. 💾 Adicione e faça o commit das alterações
 
 ```bash
-Copiar
-Editar
 git add .
 git commit -m "Mensagem do commit"
 ```
@@ -45,16 +41,12 @@ git commit -m "Mensagem do commit"
 ### 7. 📢 Push para o repositório remoto
 
 ```bash
-Copiar
-Editar
 git push origin nome-usuario-minha-funcionalidade
 ```
 
 ### 8. 📢 Solicite a revisão do seu branch
 
 ```bash
-Copiar
-Editar
 git pull upstream master
 ```
 
