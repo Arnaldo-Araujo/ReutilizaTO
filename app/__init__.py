@@ -14,12 +14,34 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.auth import auth_bp
+    # Registrar Blueprints
+    from app.routes import (
+        usuario_routes,
+        categoria_routes,
+        produto_routes,
+        transacao_routes,
+        web_routes,
+    )
 
-    app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(usuario_routes.bp)
+    app.register_blueprint(categoria_routes.bp)
+    app.register_blueprint(produto_routes.bp)
+    app.register_blueprint(transacao_routes.bp)
+    app.register_blueprint(web_routes.bp)
 
-    @app.route("/")
-    def index():
-        return "Sistema ReutilizaTO rodando com sucesso!"
+    # ✅ Criar administrador padrão após o app e banco estarem prontos
+    with app.app_context():
+        from app.models.usuario import Usuario, TipoUsuarioEnum
+
+        if not Usuario.query.filter_by(email="admin@reutilizato.org").first():
+            admin = Usuario(
+                nome="Administrador",
+                email="admin@reutilizato.org",
+                tipo=TipoUsuarioEnum.administrador,
+            )
+            admin.set_senha("admin!@#")
+            db.session.add(admin)
+            db.session.commit()
+            print("✅ Usuário administrador criado!")
 
     return app

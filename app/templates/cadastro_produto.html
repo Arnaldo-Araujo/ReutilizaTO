@@ -1,0 +1,43 @@
+{% extends 'base.html' %} {% block title %}Cadastrar Produto{% endblock %} {%
+block content %}
+<h2>Cadastrar Produto</h2>
+<form method="POST" action="/cadastro-produto" enctype="multipart/form-data">
+  <div class="mb-3">
+    <label>Nome:</label>
+    <input type="text" name="nome" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label>Descrição:</label>
+    <textarea name="descricao" class="form-control"></textarea>
+  </div>
+  <div class="mb-3">
+    <label>Condição:</label>
+    <select name="condicao" class="form-control">
+      <option value="novo">Novo</option>
+      <option value="usado">Usado</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label>Status:</label>
+    <select name="status" class="form-control">
+      <option value="disponivel">Disponível</option>
+      <option value="reservado">Reservado</option>
+      <option value="doado">Doado</option>
+    </select>
+  </div>
+  <div class="mb-3">
+    <label>ID do Usuário:</label>
+    <input type="number" name="usuario_id" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label>ID da Categoria:</label>
+    <input type="number" name="categoria_id" class="form-control" required />
+  </div>
+  <div class="mb-3">
+    <label>Foto:</label>
+    <input type="file" name="foto" accept="image/*" class="form-control" />
+  </div>
+
+  <button type="submit" class="btn btn-success">Cadastrar Produto</button>
+</form>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %} {% block title %}Cadastro de Usuário{% endblock %} {%
+block content %}
+<h2 class="mb-4">Cadastro de Usuário</h2>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %} {% if messages
+%} {% for category, message in messages %}
+<div
+  class="alert alert-{{ category }} alert-dismissible fade show"
+  role="alert"
+>
+  {{ message }}
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endfor %} {% endif %} {% endwith %}
+
+<form
+  method="POST"
+  action="{{ url_for('web.cadastro_usuario') }}"
+  class="border p-4 rounded bg-light shadow-sm"
+>
+  <div class="mb-3">
+    <label class="form-label">Nome</label>
+    <input type="text" name="nome" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" required />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Senha</label>
+    <input
+      type="password"
+      name="senha"
+      id="senha"
+      class="form-control"
+      required
+      oninput="checarForcaSenha()"
+    />
+    <small id="forcaSenhaTexto" class="form-text text-muted"></small>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Confirmar Senha</label>
+    <input
+      type="password"
+      name="confirmar_senha"
+      class="form-control"
+      required
+    />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Cidade</label>
+    <input type="text" name="cidade" class="form-control" />
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tipo de Usuário</label>
+    <select name="tipo" class="form-select" required>
+      <option value="doador" selected>Doador</option>
+      <option value="beneficiario">Beneficiário</option>
+      <option value="ong">ONG</option>
+    </select>
+  </div>
+
+  <div class="d-grid">
+    <button type="submit" class="btn btn-success">Cadastrar</button>
+  </div>
+</form>
+
+<script>
+  function checarForcaSenha() {
+    const senha = document.getElementById("senha").value;
+    const texto = document.getElementById("forcaSenhaTexto");
+
+    let forca = 0;
+    if (senha.length >= 6) forca++;
+    if (/[a-z]/.test(senha)) forca++;
+    if (/[A-Z]/.test(senha)) forca++;
+    if (/\d/.test(senha)) forca++;
+    if (/[^A-Za-z0-9]/.test(senha)) forca++;
+
+    if (senha.length === 0) {
+      texto.textContent = "";
+    } else if (forca <= 2) {
+      texto.textContent = "Senha fraca 😟";
+      texto.className = "form-text text-danger";
+    } else if (forca === 3) {
+      texto.textContent = "Senha razoável 😐";
+      texto.className = "form-text text-warning";
+    } else {
+      texto.textContent = "Senha forte 💪";
+      texto.className = "form-text text-success";
+    }
+  }
+</script>
+{% endblock %}
