@@ -1,0 +1,15 @@
+{% extends 'base.html' %} {% block title %}Contato - ReutilizaTO{% endblock %}
+{% block content %}
+<h2>Fale Conosco</h2>
+<form>
+  <div class="mb-3">
+    <label for="nome" class="form-label">Seu Nome</label>
+    <input type="text" class="form-control" id="nome" />
+  </div>
+  <div class="mb-3">
+    <label for="mensagem" class="form-label">Mensagem</label>
+    <textarea class="form-control" id="mensagem" rows="4"></textarea>
+  </div>
+  <button type="submit" class="btn btn-success">Enviar</button>
+</form>
+{% endblock %}

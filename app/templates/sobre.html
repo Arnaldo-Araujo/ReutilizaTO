@@ -1,0 +1,81 @@
+{% extends 'base.html' %} {% block title %}Sobre o ReutilizaTO{% endblock %} {%
+block content %}
+<div class="bg-light p-5 rounded shadow-sm">
+  <h1 class="mb-4 text-success">Sobre o ReutilizaTO</h1>
+
+  <p class="lead">
+    O <strong>ReutilizaTO</strong> é uma iniciativa que nasceu com um propósito
+    simples e poderoso: conectar pessoas, comunidades e instituições em torno da
+    solidariedade e do reaproveitamento de recursos.
+  </p>
+
+  <p>
+    Criado por estudantes de Análise e Desenvolvimento de Sistemas da
+    <strong>Universidade Estadual do Tocantins (UNITINS)</strong>, o sistema foi
+    desenvolvido para facilitar a
+    <strong>troca e doação de produtos</strong> entre moradores de cidades do
+    interior do Tocantins, ONGs e associações comunitárias.
+  </p>
+
+  <h3 class="mt-5 text-primary">Nosso propósito</h3>
+  <p>
+    Muitas vezes, objetos em bom estado são descartados por falta de uso,
+    enquanto outras pessoas precisam exatamente daquilo. O ReutilizaTO ajuda a
+    resolver esse problema, promovendo uma
+    <strong>economia colaborativa</strong>, estimulando o
+    <strong>consumo consciente</strong> e evitando o desperdício.
+  </p>
+
+  <h3 class="mt-4 text-primary">Como funciona</h3>
+  <ul>
+    <li>
+      Qualquer morador pode se cadastrar e anunciar produtos que deseja doar ou
+      trocar.
+    </li>
+    <li>
+      ONGs e instituições podem cadastrar campanhas ou solicitar doações
+      específicas.
+    </li>
+    <li>
+      Usuários interessados entram em contato diretamente e registram a troca ou
+      doação no sistema.
+    </li>
+    <li>
+      É possível filtrar produtos por cidade, categoria e tipo de transação
+      (troca ou doação).
+    </li>
+  </ul>
+
+  <h3 class="mt-4 text-primary">O que você pode doar ou trocar?</h3>
+  <p>O ReutilizaTO aceita diversos tipos de produtos:</p>
+  <ul>
+    <li>Roupas em bom estado</li>
+    <li>Móveis e eletrodomésticos funcionais</li>
+    <li>Materiais escolares e livros</li>
+    <li>Itens infantis e brinquedos</li>
+  </ul>
+
+  <h3 class="mt-4 text-primary">Nosso impacto</h3>
+  <p>
+    Acreditamos que pequenas ações geram grandes transformações. Cada produto
+    doado representa um alívio para uma família, um apoio para uma ONG ou um
+    gesto de empatia. Juntos, estamos construindo comunidades mais
+    <strong>solidárias, sustentáveis e conectadas</strong>.
+  </p>
+
+  <h3 class="mt-4 text-primary">Junte-se a nós</h3>
+  <p>
+    Seja um <strong>doador</strong>, um <strong>beneficiário</strong> ou uma
+    <strong>ONG parceira</strong>. O ReutilizaTO é de todos nós. Crie sua conta
+    e faça parte dessa rede de generosidade.
+  </p>
+
+  <div class="mt-5">
+    <a
+      href="{{ url_for('web.cadastro_usuario') }}"
+      class="btn btn-success btn-lg"
+      >Quero participar</a
+    >
+  </div>
+</div>
+{% endblock %}

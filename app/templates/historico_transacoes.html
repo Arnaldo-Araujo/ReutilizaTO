@@ -1,0 +1,40 @@
+{% extends 'base.html' %} {% block title %}Histórico de Transações{% endblock %}
+{% block content %}
+<h2>Histórico de Transações</h2>
+
+<form method="GET" action="/historico">
+  <div class="mb-3">
+    <label>ID do Usuário:</label>
+    <input type="number" name="usuario" class="form-control" required />
+    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+  </div>
+</form>
+
+{% if transacoes %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Tipo</th>
+      <th>Produto</th>
+      <th>De</th>
+      <th>Para</th>
+      <th>Data</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for t in transacoes %}
+    <tr>
+      <td>{{ t.id }}</td>
+      <td>{{ t.tipo }}</td>
+      <td>{{ t.produto_id }}</td>
+      <td>{{ t.de_usuario_id }}</td>
+      <td>{{ t.para_usuario_id }}</td>
+      <td>{{ t.data }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% elif request.args.usuario %}
+<div class="alert alert-warning">Nenhuma transação encontrada.</div>
+{% endif %} {% endblock %}
