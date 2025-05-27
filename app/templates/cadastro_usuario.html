@@ -64,9 +64,27 @@ block content %}
       <option value="ong">ONG</option>
     </select>
   </div>
-
+  <div class="form-check mb-3">
+    <input
+      class="form-check-input"
+      type="checkbox"
+      value=""
+      id="termosCheck"
+      required
+    />
+    <label class="form-check-label" for="termosCheck">
+      Concordo com os <a href="#">Termos de Uso</a> e
+      <a href="#">Política de Privacidade</a>
+    </label>
+  </div>
   <div class="d-grid">
     <button type="submit" class="btn btn-success">Cadastrar</button>
+  </div>
+  <div class="text-center mt-3">
+    <span class="text-muted"
+      >Já tem uma conta?
+      <a href="{{ url_for('web.login_usuario') }}">Entrar</a></span
+    >
   </div>
 </form>
 
