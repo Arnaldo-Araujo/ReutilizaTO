@@ -60,8 +60,8 @@
                 >Gerenciar Usuários</a
               >
             </li>
-            {% else %} {% if session['usuario_tipo'] != 'beneficiario' and
-            current_user.is_authenticated %}
+            {% else %} {% if current_user.is_authenticated and
+            session['usuario_tipo'] != 'beneficiario' %}
             <li class="nav-item">
               <a class="nav-link" href="{{ url_for('prod.cadastro_produto') }}"
                 >Cadastrar Produto</a

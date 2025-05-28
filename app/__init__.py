@@ -21,6 +21,7 @@ def create_app():
     migrate.init_app(app, db)
     login_manager.init_app(app)
     login_manager.login_view = "auth.login_usuario"
+    login_manager.session_protection = "strong"
     # Registrar Blueprints
     from app.routes import (
         auth_routes,

@@ -10,7 +10,7 @@ from flask import (
     flash,
     session,
 )
-from flask_login import current_user, login_required, LoginManager
+from flask_login import current_user, login_required, LoginManager, login_user
 from app import db
 from app.models.usuario import TipoUsuarioEnum, Usuario
 import re
@@ -36,11 +36,12 @@ def login_usuario():
         usuario = Usuario.query.filter_by(email=email).first()
 
         if usuario and usuario.verificar_senha(senha):
+            login_user(usuario)  # 👈 ESSENCIAL
             session["usuario_id"] = usuario.id
             session["usuario_nome"] = usuario.nome
             session["usuario_email"] = usuario.email
-            session["usuario_tipo"] = usuario.tipo.value  # comum, trocador, admin
-            session["usuario_foto"] = "img/avatar.png"  # futuro campo no model
+            session["usuario_tipo"] = usuario.tipo.value
+            session["usuario_foto"] = "img/avatar.png"
             flash("Login bem-sucedido!", "success")
             return redirect(url_for("prod.index"))
         else:

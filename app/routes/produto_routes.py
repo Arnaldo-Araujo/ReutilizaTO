@@ -1,7 +1,7 @@
 import os
 from werkzeug.utils import secure_filename
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import login_required
+from flask_login import login_required, current_user
 from sqlalchemy import or_
 from app import db
 from app.models import usuario
@@ -26,6 +26,7 @@ def index():
 
 
 @bp.route("/cadastro-produto", methods=["GET", "POST"])
+@login_required
 def cadastro_produto():
     from app.models.categoria import Categoria
     from app.models.produto import Produto
