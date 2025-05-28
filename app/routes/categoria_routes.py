@@ -1,41 +1,34 @@
-from flask import Blueprint, request, jsonify
+import os
+from werkzeug.utils import secure_filename
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from app import db
-from app.models.categoria import Categoria
-
-bp = Blueprint("categorias", __name__, url_prefix="/categorias")
-
-
-# Listar todas
-@bp.route("/", methods=["GET"])
-def listar_categorias():
-    categorias = Categoria.query.all()
-    return jsonify([{"id": c.id, "nome": c.nome} for c in categorias])
+from app.models.usuario import Usuario
+from app.models.produto import Produto
+from app.models.transacao import Transacao
+import re
+from uuid import uuid4
 
 
-# Cadastrar nova
-@bp.route("/", methods=["POST"])
+from werkzeug.security import generate_password_hash, check_password_hash
+
+bp = Blueprint("cat", __name__)
+
+
+@bp.route("/cadastrar-categoria", methods=["GET", "POST"])
 def cadastrar_categoria():
-    dados = request.get_json()
-    categoria = Categoria(nome=dados["nome"])
-    db.session.add(categoria)
-    db.session.commit()
-    return jsonify({"id": categoria.id, "nome": categoria.nome}), 201
+    from app.models.categoria import Categoria
 
+    if request.method == "POST":
+        nome = request.form["nome"]
 
-# Atualizar
-@bp.route("/<int:id>", methods=["PUT"])
-def atualizar_categoria(id):
-    categoria = Categoria.query.get_or_404(id)
-    dados = request.get_json()
-    categoria.nome = dados["nome"]
-    db.session.commit()
-    return jsonify({"id": categoria.id, "nome": categoria.nome})
+        if Categoria.query.filter_by(nome=nome).first():
+            flash("Essa categoria já existe.", "warning")
+            return redirect(url_for("cat.cadastrar_categoria"))
 
+        nova = Categoria(nome=nome)
+        db.session.add(nova)
+        db.session.commit()
+        flash("Categoria cadastrada com sucesso!", "success")
+        return redirect(url_for("cat.cadastro_produto"))
 
-# Remover
-@bp.route("/<int:id>", methods=["DELETE"])
-def deletar_categoria(id):
-    categoria = Categoria.query.get_or_404(id)
-    db.session.delete(categoria)
-    db.session.commit()
-    return jsonify({"mensagem": "Categoria removida com sucesso."})
+    return render_template("cadastrar_categoria.html")

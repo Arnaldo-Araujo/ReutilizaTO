@@ -1,18 +1,20 @@
+from sqlalchemy import Boolean
 from app import db
 from datetime import datetime
+from app.models.foto_produto import FotoProduto
 
 
 class Produto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(120), nullable=False)
     descricao = db.Column(db.Text)
-    foto = db.Column(db.String(255))  # pode armazenar caminho da imagem
     condicao = db.Column(db.String(50))  # novo, usado
     status = db.Column(db.String(20), default="disponivel")
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
-
+    aprovado = db.Column(Boolean, default=False)
     usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
     categoria_id = db.Column(db.Integer, db.ForeignKey("categoria.id"), nullable=False)
+    fotos = db.relationship("FotoProduto", backref="produto")
 
     def to_dict(self):
         return {

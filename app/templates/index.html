@@ -19,7 +19,7 @@ block content %}
             alguém.
           </p>
           <a
-            href="{{ url_for('web.cadastro_usuario') }}"
+            href="{{ url_for('auth.cadastro_usuario') }}"
             class="btn btn-outline-primary"
             >Quero doar</a
           >
@@ -36,7 +36,7 @@ block content %}
             pessoas da sua comunidade.
           </p>
           <a
-            href="{{ url_for('web.cadastro_usuario') }}"
+            href="{{ url_for('auth.cadastro_usuario') }}"
             class="btn btn-outline-success"
             >Quero receber</a
           >
@@ -53,7 +53,7 @@ block content %}
             suas ações sociais.
           </p>
           <a
-            href="{{ url_for('web.cadastro_usuario') }}"
+            href="{{ url_for('auth.cadastro_usuario') }}"
             class="btn btn-outline-warning"
             >Quero participar</a
           >
@@ -69,7 +69,9 @@ block content %}
             Divulgue o projeto, doe tempo ou ajude financeiramente com parcerias
             e visibilidade.
           </p>
-          <a href="{{ url_for('web.contato') }}" class="btn btn-outline-danger"
+          <a
+            href="{{ url_for('instito.contato') }}"
+            class="btn btn-outline-danger"
             >Fale conosco</a
           >
         </div>

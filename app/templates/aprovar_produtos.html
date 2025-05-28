@@ -1,0 +1,11 @@
+{% extends "base.html" %} {% block title %}Aprovar Produtos{% endblock %} {%
+block content %}
+<h2>Produtos Pendentes</h2>
+{% for p in produtos %}
+<div>
+  <strong>{{ p.nome }}</strong> — {{ p.descricao }}
+  <!-- Aqui você pode colocar um botão para aprovar -->
+</div>
+{% else %}
+<p>Nenhum produto pendente.</p>
+{% endfor %} {% endblock %}

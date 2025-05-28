@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block title %}Aprovar Produtos - ReutilizaTO{%
+endblock %} {% block content %}
+<h2 class="mb-4">Aprovar Produtos</h2>
+
+{% if produtos %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+  {% for produto in produtos %}
+  <div class="col">
+    <div class="card h-100">
+      {% if produto.fotos and produto.fotos|length > 0 %}
+      <img
+        src="{{ url_for('static', filename=produto.fotos[0].caminho) }}"
+        class="card-img-top"
+        style="height: 200px; object-fit: cover"
+      />
+      {% else %}
+      <img
+        src="{{ url_for('static', filename='img/no-image.png') }}"
+        class="card-img-top"
+        style="height: 200px; object-fit: cover"
+      />
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ produto.nome }}</h5>
+        <p class="card-text">{{ produto.descricao }}</p>
+        <form
+          method="POST"
+          action="{{ url_for('prod.aprovar_produto', id=produto.id) }}"
+          class="d-inline me-2"
+        >
+          <button type="submit" class="btn btn-success btn-sm">Aprovar</button>
+        </form>
+        <form
+          method="POST"
+          action="{{ url_for('prod.reprovar_produto', id=produto.id) }}"
+          class="d-inline"
+        >
+          <button type="submit" class="btn btn-outline-danger btn-sm">
+            Reprovar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">Nenhum produto pendente de aprovação.</p>
+{% endif %} {% endblock %}

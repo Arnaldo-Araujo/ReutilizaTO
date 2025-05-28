@@ -1,0 +1,26 @@
+{% extends "base.html" %} {% block title %}Gerenciar Usuários{% endblock %} {%
+block content %}
+<h2>Usuários Cadastrados</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Tipo</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for u in usuarios %}
+    <tr>
+      <td>{{ u.nome }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.tipo }}</td>
+      <td>
+        <!-- Aqui você pode colocar ações como editar ou excluir -->
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -4,7 +4,7 @@
 
 <form
   method="POST"
-  action="{{ url_for('web.login_usuario') }}"
+  action="{{ url_for('auth.login_usuario') }}"
   class="border p-4 rounded shadow-sm bg-light"
 >
   <div class="mb-3">
@@ -34,7 +34,8 @@
     <button type="submit" class="btn btn-success">Entrar</button>
   </div>
 </form>
-<p class="mt-3">
-  Não tem conta? <a href="{{ url_for('web.cadastro_usuario') }}">Cadastre-se</a>
+<p class="mt-3 text-center">
+  Não tem conta?
+  <a href="{{ url_for('auth.cadastro_usuario') }}">Cadastre-se</a>
 </p>
 {% endblock %}

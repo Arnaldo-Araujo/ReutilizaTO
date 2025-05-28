@@ -16,7 +16,7 @@ block content %}
 
 <form
   method="POST"
-  action="{{ url_for('web.cadastro_usuario') }}"
+  action="{{ url_for('auth.cadastro_usuario') }}"
   class="border p-4 rounded bg-light shadow-sm"
 >
   <div class="mb-3">
@@ -64,27 +64,29 @@ block content %}
       <option value="ong">ONG</option>
     </select>
   </div>
-  <div class="form-check mb-3">
-    <input
-      class="form-check-input"
-      type="checkbox"
-      value=""
-      id="termosCheck"
-      required
-    />
+  <div class="form-check mt-3">
+    <input class="form-check-input" type="checkbox" id="termosCheck" required />
     <label class="form-check-label" for="termosCheck">
-      Concordo com os <a href="#">Termos de Uso</a> e
-      <a href="#">Política de Privacidade</a>
+      Concordo com os
+      <a href="{{ url_for('instito.termos_de_uso') }}" target="_blank"
+        >Termos de Uso</a
+      >
+      e
+      <a href="{{ url_for('instito.politica_de_privacidade') }}" target="_blank"
+        >Política de Privacidade</a
+      >.
     </label>
   </div>
-  <div class="d-grid">
+
+  <div class="d-grid mt-3">
     <button type="submit" class="btn btn-success">Cadastrar</button>
   </div>
+
   <div class="text-center mt-3">
     <span class="text-muted"
       >Já tem uma conta?
-      <a href="{{ url_for('web.login_usuario') }}">Entrar</a></span
-    >
+      <a href="{{ url_for('auth.login_usuario') }}">Entrar</a>
+    </span>
   </div>
 </form>
 
