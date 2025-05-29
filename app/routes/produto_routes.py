@@ -8,6 +8,8 @@ from app.models import usuario
 from app.models.usuario import TipoUsuarioEnum, Usuario
 from app.models.produto import Produto
 from app.models.transacao import Transacao
+from flask_wtf import FlaskForm
+from wtforms import HiddenField
 import re
 from uuid import uuid4
 
@@ -15,6 +17,10 @@ from uuid import uuid4
 from werkzeug.security import generate_password_hash, check_password_hash
 
 bp = Blueprint("prod", __name__)
+
+
+class DummyForm(FlaskForm):
+    dummy = HiddenField()
 
 
 @bp.route("/")
@@ -129,7 +135,7 @@ def aprovar():
     return render_template("produtos_aprovar.html", produtos=produtos_pendentes)
 
 
-@bp.route("/aprovar/<int:id>")
+@bp.route("/aprovar/<int:id>", methods=["POST"])
 def aprovar_produto(id):
     if session.get("usuario_tipo") != "administrador":
         flash("Acesso não autorizado", "danger")

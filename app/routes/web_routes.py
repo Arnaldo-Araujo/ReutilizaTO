@@ -17,3 +17,13 @@ bp = Blueprint("web", __name__)
 @bp.route("/home")
 def home():
     return redirect(url_for("web.index"))
+
+
+@bp.route("/campanhas")
+def campanhas():
+    return render_template("campanhas.html")
+
+
+@bp.route("/comofunciona")
+def comofunciona():
+    return render_template("comofunciona.html")
