@@ -120,6 +120,17 @@
                     {% endif %}
                   </h6>
                 </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('prod.notificacoes') }}">
+                    Notificações {% if notificacoes_nao_lidas is defined and
+                    notificacoes_nao_lidas > 0 %}
+                    <span class="badge bg-danger"
+                      >{{ notificacoes_nao_lidas }}</span
+                    >
+                    {% endif %}
+                  </a>
+                </li>
+
                 <li><hr class="dropdown-divider" /></li>
                 <li>
                   <a class="dropdown-item" href="{{ url_for('auth.logout') }}"

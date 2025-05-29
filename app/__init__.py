@@ -44,6 +44,7 @@ def create_app():
         inspector = inspect(db.engine)
         if inspector.has_table("usuario"):  # confere se a tabela existe
             from app.models.usuario import Usuario, TipoUsuarioEnum
+            from app.models.notificacao import Notificacao
 
             if not Usuario.query.filter_by(email="admin@reutilizato.org").first():
                 admin = Usuario(
@@ -58,7 +59,14 @@ def create_app():
 
     @app.context_processor
     def inject_current_user():
-        return dict(current_user=current_user)
+        notificacoes_nao_lidas = 0
+        if current_user.is_authenticated:
+            notificacoes_nao_lidas = Notificacao.query.filter_by(
+                usuario_id=current_user.id, lido=False
+            ).count()
+        return dict(
+            current_user=current_user, notificacoes_nao_lidas=notificacoes_nao_lidas
+        )
 
     @login_manager.user_loader
     def load_user(user_id):

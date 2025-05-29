@@ -28,6 +28,12 @@ class Usuario(db.Model, UserMixin):
     cidade = db.Column(db.String(100))
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
     data_desativacao = db.Column(db.DateTime, nullable=True)
+    notificacoes_enviadas = db.relationship(
+        "Notificacao",
+        foreign_keys="Notificacao.transmissor_id",
+        backref="usuario_enviou",
+        lazy=True,
+    )
 
     def set_senha(self, senha):
         self.senha_hash = generate_password_hash(senha)

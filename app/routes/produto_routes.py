@@ -5,6 +5,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import or_
 from app import db
 from app.models import usuario
+from app.models.notificacao import Notificacao
 from app.models.usuario import TipoUsuarioEnum, Usuario
 from app.models.produto import Produto
 from app.models.transacao import Transacao
@@ -89,6 +90,40 @@ def cadastro_produto():
     return render_template("cadastro_produto.html", categorias=categorias)
 
 
+@bp.route("/interesse/<int:produto_id>", methods=["GET"])
+def interesse(produto_id):
+    if not session.get("usuario_id"):
+        flash("Você precisa estar logado para demonstrar interesse.", "warning")
+        return redirect(url_for("auth.login_usuario"))
+
+    produto = Produto.query.get_or_404(produto_id)
+
+    nova_transacao = Transacao(
+        produto_id=produto.id,
+        de_usuario_id=session["usuario_id"],
+        para_usuario_id=produto.usuario_id,  # dono do produto
+        tipo="interesse",
+    )
+    db.session.add(nova_transacao)
+
+    # Criar notificação para o dono do produto
+    mensagem = f"O usuário {current_user.nome} demonstrou interesse no seu produto: {produto.nome}."
+
+    nova_notificacao = Notificacao(
+        usuario_id=produto.usuario_id,  # destinatário
+        transmissor_id=current_user.id,  # quem enviou
+        mensagem=mensagem,
+    )
+    db.session.flush()
+    nova_notificacao.interesse_id = nova_transacao.id
+    db.session.add(nova_notificacao)
+
+    db.session.commit()
+
+    flash("Seu interesse foi registrado com sucesso!", "success")
+    return redirect(url_for("prod.index"))
+
+
 @bp.route("/excluir-produto/<int:produto_id>", methods=["POST"])
 def excluir_produto(produto_id):
     produto = Produto.query.get_or_404(produto_id)
@@ -148,22 +183,86 @@ def aprovar_produto(id):
 
 
 @bp.route("/produto/<int:id>/reprovar", methods=["POST"])
+@login_required
 def reprovar_produto(id):
-    produto = Produto.query.get_or_404(id)
-
-    if session.get("usuario_tipo") != "administrador":
-        flash("Você não tem permissão para excluir este produto.", "danger")
+    if current_user.tipo != TipoUsuarioEnum.administrador:
+        flash("Acesso negado.", "danger")
         return redirect(url_for("prod.index"))
 
-    # Remove as fotos (e arquivos físicos, se quiser)
+    motivo = request.form.get("motivo")
+    produto = Produto.query.get_or_404(id)
+
+    # Criar notificação para o dono do produto
+    from app.models.notificacao import Notificacao  # se tiver essa tabela
+
+    notificacao = Notificacao(
+        usuario_id=produto.usuario_id,
+        mensagem=f"Seu produto '{produto.nome}' foi reprovado. Motivo: {motivo}",
+    )
+    db.session.add(notificacao)
+
+    # Excluir produto e fotos
     for foto in produto.fotos:
-        caminho_fisico = os.path.join("app", "static", foto.caminho)
-        if os.path.exists(caminho_fisico):
-            os.remove(caminho_fisico)
+        caminho = os.path.join("app", "static", foto.caminho)
+        if os.path.exists(caminho):
+            os.remove(caminho)
         db.session.delete(foto)
 
     db.session.delete(produto)
     db.session.commit()
+    flash("Produto reprovado e excluído com sucesso!", "success")
+    return redirect(url_for("prod.aprovar"))
 
-    flash("Produto excluído com sucesso!", "success")
-    return redirect(url_for("prod.index"))
+
+@bp.route("/notificacoes")
+@login_required
+def notificacoes():
+    notificacoes_nao_lidas = (
+        Notificacao.query.filter_by(usuario_id=current_user.id, lido=False)
+        .order_by(Notificacao.criado_em.desc())
+        .all()
+    )
+    notificacoes_lidas = (
+        Notificacao.query.filter_by(usuario_id=current_user.id, lido=True)
+        .order_by(Notificacao.criado_em.desc())
+        .all()
+    )
+    return render_template(
+        "notificacao.html",
+        notificacoes_nao_lidas=notificacoes_nao_lidas,
+        notificacoes_lidas=notificacoes_lidas,
+    )
+
+
+@bp.route("/notificacoes/<int:id>/marcar_lida", methods=["POST"])
+@login_required
+def marcar_lida(id):
+    notificacao = Notificacao.query.get_or_404(id)
+    if notificacao.usuario_id == current_user.id:
+        notificacao.lido = True
+        db.session.commit()
+    flash("Notificação lida!", "success")
+    return redirect(url_for("prod.notificacoes"))
+
+
+@bp.route("/notificacoes/marcar_todas_lidas", methods=["POST"])
+@login_required
+def marcar_todas_lidas():
+    Notificacao.query.filter_by(usuario_id=current_user.id, lido=False).update(
+        {"lido": True}
+    )
+    db.session.commit()
+    flash("Todas as notificações foram marcadas como lidas!", "success")
+    return redirect(url_for("prod.notificacoes"))
+
+
+@bp.route("/notificacoes/<int:id>/responder", methods=["POST"])
+@login_required
+def responder_notificacao(id):
+    notificacao_original = Notificacao.query.get_or_404(id)
+    mensagem = request.form.get("mensagem")
+    nova = Notificacao(mensagem=mensagem, usuario_id=notificacao_original.origem_id)
+    db.session.add(nova)
+    db.session.commit()
+    flash("Resposta enviada!", "success")
+    return redirect(url_for("prod.notificacoes"))

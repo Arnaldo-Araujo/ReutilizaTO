@@ -40,72 +40,55 @@ endblock %} {% block content %}
           </div>
         </div>
 
-        <!-- MODAL -->
-        <div
-          class="modal fade"
-          id="produtoModal{{ produto.id }}"
-          tabindex="-1"
-          aria-labelledby="modalLabel{{ produto.id }}"
-          aria-hidden="true"
-        >
+        <!-- MODAL PRODUTO -->
+        <div class="modal fade" id="produtoModal{{ produto.id }}" tabindex="-1" aria-labelledby="modalLabel{{ produto.id }}" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
               <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel{{ produto.id }}">
-                  {{ produto.nome }}
-                </h5>
-                <button
-                  type="button"
-                  class="btn-close"
-                  data-bs-dismiss="modal"
-                ></button>
+                <h5 class="modal-title">{{ produto.nome }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
               </div>
+
               <div class="modal-body">
-                {% if produto.fotos and produto.fotos|length > 0 %}
-                <img
-                  src="{{ url_for('static', filename=produto.fotos[0].caminho) }}"
-                  class="card-img-top"
-                  style="height: 200px; object-fit: cover"
-                />
-                {% else %}
-                <img
-                  src="{{ url_for('static', filename='img/no-image.png') }}"
-                  class="card-img-top"
-                  style="height: 200px; object-fit: cover"
-                />
-                {% endif %}
+                <img src="{{ url_for('static', filename=produto.fotos[0].caminho) }}" class="card-img-top mb-3" style="height: 200px; object-fit: contain;" />
 
                 <p><strong>Descrição:</strong> {{ produto.descricao }}</p>
                 <p><strong>Condição:</strong> {{ produto.condicao }}</p>
                 <p><strong>Status:</strong> {{ produto.status }}</p>
-              </div>
-              <div class="modal-footer">
-                {% if session.get("usuario_id") == produto.usuario_id or session.get("usuario_tipo") == 'administrador' %}
-                <form method="POST" action="{{ url_for('prod.excluir_produto', produto_id=produto.id) }}">
-                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Tem certeza que deseja excluir este produto?')">Excluir</button>
-                </form>
-                {% endif %}
-                {% if session.get("usuario_id") %}
-                <a href="#" class="btn btn-success">Tenho interesse</a>
-                {% else %}
-                <a
-                  href="{{ url_for('auth.login_usuario') }}"
-                  class="btn btn-secondary"
-                  >Entrar para demonstrar interesse</a
-                >
-                {% endif %}
 
-                <button
-                  type="button"
-                  class="btn btn-outline-danger"
-                  data-bs-dismiss="modal"
-                >
-                  Fechar
-                </button>
+                {% if session['usuario_tipo'] == 'administrador' %}
+                <form action="{{ url_for('prod.reprovar_produto', id=produto.id) }}" method="POST">
+                  <div class="mb-3">
+                    <label for="motivoReprovar{{ produto.id }}" class="form-label"><strong>Motivo da Reprovação:</strong></label>
+                    <textarea name="motivo" class="form-control" id="motivoReprovar{{ produto.id }}" rows="2" required></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Excluir</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                  </div>
+                </form>
+                {% else %}
+                <div class="modal-footer">
+                {% if session.get("usuario_id") %}
+                 <form action="{{ url_for('prod.interesse', produto_id=produto.id) }}" method="POST">
+                  <a href="{{ url_for('prod.interesse', produto_id=produto.id) }}" class="btn btn-success">
+                    Tenho interesse
+                  </a>
+                </form>
+                {% else %}
+                  <a href="{{ url_for('auth.login_usuario') }}" class="btn btn-secondary">
+                    Entrar para demonstrar interesse
+                  </a>
+                {% endif %}
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Fechar</button>
+              </div>
+
+                {% endif %}
               </div>
             </div>
           </div>
         </div>
+
       </div>
       {% endfor %}
     </div>
