@@ -228,7 +228,7 @@ def notificacoes():
         .all()
     )
     return render_template(
-        "notificacao.html",
+        "notificacoes.html",
         notificacoes_nao_lidas=notificacoes_nao_lidas,
         notificacoes_lidas=notificacoes_lidas,
     )
@@ -261,7 +261,13 @@ def marcar_todas_lidas():
 def responder_notificacao(id):
     notificacao_original = Notificacao.query.get_or_404(id)
     mensagem = request.form.get("mensagem")
-    nova = Notificacao(mensagem=mensagem, usuario_id=notificacao_original.origem_id)
+
+    nova = Notificacao(
+        mensagem=mensagem,
+        usuario_id=notificacao_original.transmissor_id,  # a resposta vai para quem mandou
+        transmissor_id=current_user.id,  # quem está respondendo é o atual logado
+    )
+
     db.session.add(nova)
     db.session.commit()
     flash("Resposta enviada!", "success")

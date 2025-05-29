@@ -1,58 +1,66 @@
-{% extends 'base.html' %} {% block title %}Notificações - ReutilizaTO{% endblock
-%} {% block content %}
-<div class="container py-4">
-  <h2 class="mb-4 text-success">Minhas Notificações</h2>
+{% extends "base.html" %} {% block content %}
+<div class="container mt-4">
+  <h2>Notificações</h2>
 
-  {% if notificacoes_nao_lidas %}
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h5 class="mb-0">📬 Não Lidas</h5>
-    <form method="POST" action="{{ url_for('prod.marcar_todas_lidas') }}">
-      <button type="submit" class="btn btn-outline-primary btn-sm">
+  <div class="mb-3">
+    <form action="{{ url_for('prod.marcar_todas_lidas') }}" method="POST">
+      <button type="submit" class="btn btn-sm btn-success">
         Marcar todas como lidas
       </button>
     </form>
   </div>
 
+  <h4>Não lidas</h4>
+  {% if notificacoes_nao_lidas %}
   <ul class="list-group mb-4">
     {% for noti in notificacoes_nao_lidas %}
-    <li class="list-group-item">
-      <div class="d-flex justify-content-between">
-        <div>
-          <p class="mb-1"><strong>{{ noti.mensagem }}</strong></p>
-          <small class="text-muted"
-            >{{ noti.criado_em.strftime('%d/%m/%Y %H:%M') }}</small
-          >
-        </div>
-        <div class="d-flex gap-2">
-          <form
-            method="POST"
-            action="{{ url_for('prod.marcar_lida', id=noti.id) }}"
-          >
-            <button type="submit" class="btn btn-sm btn-outline-success">
-              Marcar como lida
-            </button>
-          </form>
-          <button
-            class="btn btn-sm btn-outline-secondary"
-            data-bs-toggle="modal"
-            data-bs-target="#responderModal{{ noti.id }}"
-          >
-            Responder
+    <li
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <div>
+        <strong>{{ noti.mensagem }}</strong><br />
+        <small class="text-muted"
+          >{{ noti.criado_em.strftime('%d/%m/%Y %H:%M') }}</small
+        >
+      </div>
+      <div>
+        <form
+          action="{{ url_for('prod.marcar_lida', id=noti.id) }}"
+          method="POST"
+          class="d-inline"
+        >
+          <button type="submit" class="btn btn-sm btn-primary">
+            Marcar como lida
           </button>
-        </div>
+        </form>
+        <button
+          class="btn btn-sm btn-secondary"
+          data-bs-toggle="modal"
+          data-bs-target="#responderModal{{ noti.id }}"
+        >
+          Responder
+        </button>
       </div>
     </li>
 
-    <!-- Modal de resposta -->
-    <div class="modal fade" id="responderModal{{ noti.id }}" tabindex="-1">
+    <!-- Modal Resposta -->
+    <div
+      class="modal fade"
+      id="responderModal{{ noti.id }}"
+      tabindex="-1"
+      aria-labelledby="responderLabel{{ noti.id }}"
+      aria-hidden="true"
+    >
       <div class="modal-dialog">
         <form
-          method="POST"
           action="{{ url_for('prod.responder_notificacao', id=noti.id) }}"
+          method="POST"
         >
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Responder Notificação</h5>
+              <h5 class="modal-title" id="responderLabel{{ noti.id }}">
+                Responder Notificação
+              </h5>
               <button
                 type="button"
                 class="btn-close"
@@ -60,18 +68,18 @@
               ></button>
             </div>
             <div class="modal-body">
-              <div class="form-group">
-                <label for="mensagem{{ noti.id }}">Mensagem</label>
+              <div class="mb-3">
+                <label for="mensagem" class="form-label">Mensagem:</label>
                 <textarea
                   class="form-control"
                   name="mensagem"
-                  id="mensagem{{ noti.id }}"
+                  rows="3"
                   required
                 ></textarea>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-primary">Enviar</button>
+              <button type="submit" class="btn btn-success">Enviar</button>
               <button
                 type="button"
                 class="btn btn-secondary"
@@ -86,22 +94,24 @@
     </div>
     {% endfor %}
   </ul>
+  {% else %}
+  <p>Nenhuma notificação nova.</p>
   {% endif %}
 
-  <hr />
-
-  <h5 class="mb-3">📜 Histórico de Notificações Lidas</h5>
+  <h4>Histórico</h4>
   {% if notificacoes_lidas %}
   <ul class="list-group">
     {% for noti in notificacoes_lidas %}
-    <li class="list-group-item text-muted">
+    <li class="list-group-item">
       {{ noti.mensagem }}<br />
-      <small>{{ noti.criado_em.strftime('%d/%m/%Y %H:%M') }}</small>
+      <small class="text-muted"
+        >{{ noti.criado_em.strftime('%d/%m/%Y %H:%M') }}</small
+      >
     </li>
     {% endfor %}
   </ul>
   {% else %}
-  <p class="text-muted">Nenhuma notificação lida ainda.</p>
+  <p>Você ainda não tem histórico de notificações.</p>
   {% endif %}
 </div>
 {% endblock %}

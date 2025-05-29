@@ -58,15 +58,13 @@ def create_app():
                 print("✅ Usuário administrador criado!")
 
     @app.context_processor
-    def inject_current_user():
-        notificacoes_nao_lidas = 0
+    def inject_notificacoes():
         if current_user.is_authenticated:
             notificacoes_nao_lidas = Notificacao.query.filter_by(
                 usuario_id=current_user.id, lido=False
-            ).count()
-        return dict(
-            current_user=current_user, notificacoes_nao_lidas=notificacoes_nao_lidas
-        )
+            ).all()  # retorna um número
+            return dict(notificacoes_nao_lidas=notificacoes_nao_lidas)
+        return {}
 
     @login_manager.user_loader
     def load_user(user_id):
