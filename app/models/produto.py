@@ -13,9 +13,10 @@ class Produto(db.Model):
     criado_em = db.Column(db.DateTime, default=datetime.utcnow)
     aprovado = db.Column(Boolean, default=False)
     usuario_id = db.Column(db.Integer, db.ForeignKey("usuario.id"), nullable=False)
+    usuario =db.relationship("Usuario", backref="produtos")
     categoria_id = db.Column(db.Integer, db.ForeignKey("categoria.id"), nullable=False)
-    fotos = db.relationship("FotoProduto", backref="produto")
-
+    fotos = db.relationship("FotoProduto", backref="produto", lazy=True)
+    
     def to_dict(self):
         return {
             "id": self.id,
@@ -25,6 +26,5 @@ class Produto(db.Model):
             "status": self.status,
             "usuario_id": self.usuario_id,
             "categoria_id": self.categoria_id,
-            "foto": self.foto,
             "criado_em": self.criado_em.strftime("%Y-%m-%d %H:%M:%S"),
         }
